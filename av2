@@ -1,0 +1,158 @@
+-- Gerado por Oracle SQL Developer Data Modeler 21.2.0.183.1957
+--   em:        2024-12-03 23:06:12 BRT
+--   site:      Oracle Database 11g
+--   tipo:      Oracle Database 11g
+
+
+
+-- predefined type, no DDL - MDSYS.SDO_GEOMETRY
+
+-- predefined type, no DDL - XMLTYPE
+
+CREATE TABLE Condominio (
+    idCondominio INT NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    endereco VARCHAR(200),
+    num VARCHAR(10),
+    cep VARCHAR(15),
+    bairro VARCHAR(50),
+    cidade VARCHAR(50),
+    estado VARCHAR(50),
+    proprietario VARCHAR(100),
+    cnpj VARCHAR(20)
+);
+
+-- Adicionando chave primária na tabela Condominio
+ALTER TABLE Condominio ADD CONSTRAINT pk_Condominio PRIMARY KEY (idCondominio);
+
+CREATE TABLE Morador (
+    idMorador INT NOT NULL,
+    bloco VARCHAR(10),
+    numApart VARCHAR(10),
+    valorAluguel DECIMAL(10, 2),
+    Condominios_idCondominio INT NOT NULL
+);
+
+ALTER TABLE Morador ADD CONSTRAINT pk_Morador PRIMARY KEY (idMorador);
+ALTER TABLE Morador ADD CONSTRAINT fk_Morador_Condominio FOREIGN KEY (Condominios_idCondominio)
+    REFERENCES Condominio(idCondominio);
+
+CREATE TABLE Sindico (
+    idSindico INT NOT NULL,
+    inicioMandato DATE NOT NULL,
+    fimMandato DATE,
+    Condominios_idCondominio INT NOT NULL
+);
+
+ALTER TABLE Sindico ADD CONSTRAINT pk_Sindico PRIMARY KEY (idSindico);
+ALTER TABLE Sindico ADD CONSTRAINT fk_Sindico_Condominio FOREIGN KEY (Condominios_idCondominio)
+    REFERENCES Condominio(idCondominio);
+
+CREATE TABLE Condominos (
+    idCondomino INT NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    cpf VARCHAR(15) NOT NULL,
+    email VARCHAR(100),
+    senha VARCHAR(100),
+    user VARCHAR(50),
+    Condominios_idCondominio INT NOT NULL
+);
+
+ALTER TABLE Condominos ADD CONSTRAINT pk_Condominos PRIMARY KEY (idCondomino);
+ALTER TABLE Condominos ADD CONSTRAINT fk_Condominos_Condominio FOREIGN KEY (Condominios_idCondominio)
+    REFERENCES Condominio(idCondominio);
+ALTER TABLE Condominos ADD CONSTRAINT uk_Condominos_cpf UNIQUE (cpf);
+
+CREATE TABLE Tarefas (
+    idTarefa INT NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    status ENUM('pendente', 'concluida') NOT NULL,
+    dataConclusao DATE,
+    descricao TEXT,
+    Condominios_idCondominio INT NOT NULL
+);
+
+ALTER TABLE Tarefas ADD CONSTRAINT pk_Tarefas PRIMARY KEY (idTarefa);
+ALTER TABLE Tarefas ADD CONSTRAINT fk_Tarefas_Condominio FOREIGN KEY (Condominios_idCondominio)
+    REFERENCES Condominio(idCondominio);
+
+CREATE TABLE Portaria (
+    idPortaria INT NOT NULL,
+    portaria VARCHAR(100),
+    Condominios_idCondominio INT NOT NULL
+);
+
+ALTER TABLE Portaria ADD CONSTRAINT pk_Portaria PRIMARY KEY (idPortaria);
+ALTER TABLE Portaria ADD CONSTRAINT fk_Portaria_Condominio FOREIGN KEY (Condominios_idCondominio)
+    REFERENCES Condominio(idCondominio);
+
+CREATE TABLE Mensagem (
+    id INT NOT NULL,
+    destinatario VARCHAR(100),
+    mensagem TEXT,
+    Condominios_idCondominio INT NOT NULL,
+    idPortaria INT
+);
+
+ALTER TABLE Mensagem ADD CONSTRAINT pk_Mensagem PRIMARY KEY (id);
+ALTER TABLE Mensagem ADD CONSTRAINT fk_Mensagem_Condominio FOREIGN KEY (Condominios_idCondominio)
+    REFERENCES Condominio(idCondominio);
+ALTER TABLE Mensagem ADD CONSTRAINT fk_Mensagem_Portaria FOREIGN KEY (idPortaria)
+    REFERENCES Portaria(idPortaria);
+
+CREATE TABLE Solicitacoes (
+    idSolicitacao INT NOT NULL,
+    solicitacao TEXT NOT NULL,
+    justificativa TEXT,
+    Condominios_idCondominio INT NOT NULL
+);
+
+ALTER TABLE Solicitacoes ADD CONSTRAINT pk_Solicitacoes PRIMARY KEY (idSolicitacao);
+ALTER TABLE Solicitacoes ADD CONSTRAINT fk_Solicitacoes_Condominio FOREIGN KEY (Condominios_idCondominio)
+    REFERENCES Condominio(idCondominio);
+
+
+
+
+-- Relat rio do Resumo do Oracle SQL Developer Data Modeler: 
+-- 
+-- CREATE TABLE                             8
+-- CREATE INDEX                             0
+-- ALTER TABLE                             18
+-- CREATE VIEW                              0
+-- ALTER VIEW                               0
+-- CREATE PACKAGE                           0
+-- CREATE PACKAGE BODY                      0
+-- CREATE PROCEDURE                         0
+-- CREATE FUNCTION                          0
+-- CREATE TRIGGER                           0
+-- ALTER TRIGGER                            0
+-- CREATE COLLECTION TYPE                   0
+-- CREATE STRUCTURED TYPE                   0
+-- CREATE STRUCTURED TYPE BODY              0
+-- CREATE CLUSTER                           0
+-- CREATE CONTEXT                           0
+-- CREATE DATABASE                          0
+-- CREATE DIMENSION                         0
+-- CREATE DIRECTORY                         0
+-- CREATE DISK GROUP                        0
+-- CREATE ROLE                              0
+-- CREATE ROLLBACK SEGMENT                  0
+-- CREATE SEQUENCE                          0
+-- CREATE MATERIALIZED VIEW                 0
+-- CREATE MATERIALIZED VIEW LOG             0
+-- CREATE SYNONYM                           0
+-- CREATE TABLESPACE                        0
+-- CREATE USER                              0
+-- 
+-- DROP TABLESPACE                          0
+-- DROP DATABASE                            0
+-- 
+-- REDACTION POLICY                         0
+-- 
+-- ORDS DROP SCHEMA                         0
+-- ORDS ENABLE SCHEMA                       0
+-- ORDS ENABLE OBJECT                       0
+-- 
+-- ERRORS                                   0
+-- WARNINGS                                 0
